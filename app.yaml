@@ -1,3 +1,11 @@
-name: Wyatt's Project
-
-laravel: main
+name: Wyatt James
+env:
+  APP_NAME: "Laravel Hub"
+  APP_URL: "http://laravel-hub-cli.test"
+  DB_DATABASE: "laravel-hub-cli-test"
+  MY_NAME: Wyatt
+php-packages:
+npm-packages:
+yarn-packages:
+artisan:
+composer:
