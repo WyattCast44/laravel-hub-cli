@@ -2,7 +2,6 @@
 
 namespace App\Commands;
 
-use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
 class InstallComposerPackage extends Command
@@ -12,14 +11,14 @@ class InstallComposerPackage extends Command
      *
      * @var string
      */
-    protected $signature = 'php-package:install {name} {--dev=false} {--type=composer}';
+    protected $signature = 'php-package:install {name} {--dev=false}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Install packages into your application';
+    protected $description = 'Install composer packages into your application';
 
     /**
      * Execute the console command.
@@ -28,17 +27,14 @@ class InstallComposerPackage extends Command
      */
     public function handle()
     {
-        exec("composer require {$this->argument('name')}");
-    }
+        $name = $this->argument('name');
 
-    /**
-     * Define the command's schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
-     * @return void
-     */
-    public function schedule(Schedule $schedule): void
-    {
-        // $schedule->command(static::class)->everyMinute();
+        $this->info("-> Installing {$name}");
+
+        if (!$this->option('dev')) {
+            exec("composer require {$name} --quiet");
+        } else {
+            exec("composer require {$name} --quiet --dev");
+        }
     }
 }

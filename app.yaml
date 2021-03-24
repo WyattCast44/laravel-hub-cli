@@ -1,11 +1,27 @@
-name: Wyatt James
+name: "Laravel Test App"
 env:
-  APP_NAME: "Laravel Hub"
-  APP_URL: "http://laravel-hub-cli.test"
-  DB_DATABASE: "laravel-hub-cli-test"
-  MY_NAME: Wyatt
+  APP_NAME: "Money Log"
+  APP_URL: "https://moneylog.test"
+  DB_NAME: "moneylog_db"
+  MAIL_DRIVER: "log"
 php-packages:
+  - wyattcast44/laravelschema
+  - vinkla/hashids
+  - laravel/telescope
+  - laravel/scout
+  - blade-ui-kit/blade-icons
+  - laravel/socialite
+  - laravel/sanctum
+php-packages-dev:
+  - brianium/paratest
 npm-packages:
-yarn-packages:
+ - "tailwindcss@latest"
+ - "postcss@latest"
+ - "autoprefixer@latest"
+ - "@tailwindcss/typography"
+ - "@tailwindcss/forms"
+ - "@tailwindcss/line-clamp"
+ - "@tailwindcss/aspect-ratio"
+ - "alpinejs"
 artisan:
-composer:
+ - migrate

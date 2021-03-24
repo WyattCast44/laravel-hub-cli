@@ -55,11 +55,17 @@ return [
     */
 
     'hidden' => [
+        // Framework commands
         NunoMaduro\LaravelConsoleSummary\SummaryCommand::class,
         Symfony\Component\Console\Command\HelpCommand::class,
         Illuminate\Console\Scheduling\ScheduleRunCommand::class,
         Illuminate\Console\Scheduling\ScheduleFinishCommand::class,
         Illuminate\Foundation\Console\VendorPublishCommand::class,
+
+        // Application commands
+        App\Commands\UpsertEnvFile::class,
+        App\Commands\InstallNpmPackage::class,
+        App\Commands\InstallComposerPackage::class,
     ],
 
     /*

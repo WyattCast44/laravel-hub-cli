@@ -69,8 +69,6 @@ class UpsertEnvFile extends Command
             ->updateExistingKeysIfPresent()
             ->appendNewKeysIfNotPresent();
 
-        $this->info("Updated {$this->keyName} to {$this->keyValue}");
-
         return 0;
     }
 
@@ -89,7 +87,8 @@ class UpsertEnvFile extends Command
 
     public function checkIfEnvFileHasKey()
     {
-        if (strpos(file_get_contents($this->path), $this->keyName)) {
+
+        if (Str::contains(file_get_contents($this->path), $this->keyName)) {
             $this->found = true;
         } else {
             $this->found = false;
@@ -140,6 +139,8 @@ class UpsertEnvFile extends Command
 
         file_put_contents($this->path, $newFile);
 
+        $this->info("-> Updated {$this->keyName} to {$this->keyValue}");
+
         return $this;
     }
 
@@ -160,5 +161,7 @@ class UpsertEnvFile extends Command
             "\n{$str}",
             FILE_APPEND
         );
+
+        $this->info("-> Upserted {$this->keyName} to {$this->keyValue}");
     }
 }
