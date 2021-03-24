@@ -8,7 +8,8 @@ Whereas in docker you would create your docker image using a `docker-compose` fi
 
 - [name](#name)
 - [env](#env)
-- [php-packages](#env)
+- [php-packages](#php-packages)
+- [php-packages](#php-packages-dev)
 
 ## `name`
 
@@ -40,4 +41,26 @@ An example is show below:
 php-packages:
   - laravel/telescope
   - laravel/socialite
+```
+
+## `php-packages-dev`
+
+The `php-packages-dev` API allows you require dev only composer packages into your application.
+
+An example is show below:
+
+```yaml
+php-packages-dev:
+  - brianium/paratest
+```
+
+## `npm-packages`
+
+The `npm-packages` API allows you install NPM packages into your application.
+
+An example is show below:
+
+```yaml
+npm-packages:
+  - "tailwindcss/@latest"
 ```
