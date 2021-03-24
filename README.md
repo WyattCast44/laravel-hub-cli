@@ -10,6 +10,7 @@ Whereas in docker you would create your docker image using a `docker-compose` fi
 - [name](#name)
 - [touch](#touch)
 - [mkdir](#mkdir)
+- [version](#version)
 - [php-packages](#php-packages)
 - [php-packages-dev](#php-packages-dev)
 - [npm-packages](#npm-packages)
@@ -54,6 +55,16 @@ An example is show below:
 ```yaml
 mkdir:
   - "resources/svg"
+```
+
+## `version`
+
+The `version` API allows you to declare what version of Laravel you want to install. You can specify any value that composer will accept.
+
+An example is show below:
+
+```yaml
+version: "7.x"
 ```
 
 ## `php-packages`
