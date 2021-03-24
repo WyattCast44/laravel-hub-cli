@@ -22,7 +22,7 @@ The `name` key is required, the sluggified version of the name will be used to g
 
 ## `env`
 
-The `env` API allows you insert or update (upsert) keys in the applications `.env` file.
+The `env` API allows you update or insert (upsert) keys in the applications `.env` file.
 
 An example is show below:
 
