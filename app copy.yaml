@@ -23,3 +23,11 @@ npm-packages:
  - "@tailwindcss/line-clamp"
  - "@tailwindcss/aspect-ratio"
  - "alpinejs"
+mkdir:
+  - "resources/svg"
+  - "app/Support"
+touch:
+  - "resources/svg/.gitkeep"
+  - "app/Support/helpers.php"
+console:
+  - "code ."

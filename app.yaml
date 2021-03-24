@@ -1,23 +1,6 @@
 name: "Laravel Test App"
-env:
-  APP_NAME: "Laravel Hub Test App"
-  APP_URL: "http://laravel-hub.test"
-  DB_DATABASE: "laravel-hub"
-  DB_USER: "root"
-  MAIL_MAILER: "log"
-php-packages:
-  - laravel/sanctum
-php-packages-dev:
-  - brianium/paratest
-npm-packages:
- - "alpinejs"
-npm-packages-dev:
- - "tailwindcss/@latest"
-mkdir:
-  - "resources/svg"
-  - "app/Support"
 touch:
-  - "resources/svg/.gitkeep"
   - "app/Support/helpers.php"
-console:
-  - "code ."
+  - "resources/svg/.gitkeep"
+mkdir:
+  - "resources/content/posts"

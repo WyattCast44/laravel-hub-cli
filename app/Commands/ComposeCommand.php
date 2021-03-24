@@ -14,7 +14,7 @@ class ComposeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'compose {script=app.yaml} {name?} {version?}';
+    protected $signature = 'compose {script=app.yaml} {name?} {version?} {--force}';
 
     /**
      * The description of the command.
@@ -66,9 +66,14 @@ class ComposeCommand extends Command
     protected $installCommand = "composer create-project laravel/laravel {NAME} {VERSION} --quiet";
 
     protected $composeKeyCommandMap = [
+        // Misc
         'env'              => 'upcertEnvValues',
+        'touch'            => 'attemptToCreateFiles',
+        'mkdir'            => 'attemptToCreateDirectories',
+        // FE Deps
         'npm-packages'     => 'attemptToInstallNpmPackages',
         'npm-packages-dev' => 'attemptToInstallNpmDevPackages',
+        // BE Deps
         'php-packages'     => 'attemptToInstallComposerPackages',
         'php-packages-dev' => 'attemptToInstallComposerDevPackages',
     ];
@@ -88,10 +93,10 @@ class ComposeCommand extends Command
             ->parseRecipeFileYaml()
             ->ensureRecipeIsNotEmpty()
             ->ensureProjectHasAName()
-            ->ensureDirectoryDNE()
+            // ->ensureDirectoryDNE()
             ->determineVersionToIntall()
             ->buildUpComposerCreateCommand()
-            ->runComposerCreateProject()
+            // ->runComposerCreateProject()
             ->changeDirectoryToProject()
             ->findHandlersForRemainingKeys()
             ->printEndBanner();
@@ -181,7 +186,9 @@ class ComposeCommand extends Command
     public function ensureDirectoryDNE()
     {
         if (is_dir("./" . Str::slug($this->projectName))) {
-            throw new Exception("A directory already exists in the install path, please delete directory or change app name.");
+            if (!$this->option('force')) {
+                throw new Exception("A directory already exists in the install path, please delete directory or change app name.");
+            }
         }
 
         return $this;
@@ -358,6 +365,65 @@ class ComposeCommand extends Command
         return tap($this, function ($c) {
             $c->attemptToInstallNpmPackages(true);
         });
+    }
+
+    public function attemptToCreateFiles()
+    {
+        if (array_key_exists('touch', $this->contents)) {
+
+            $this->line("");
+            $this->info("===> Creating files");
+
+            $files = $this->contents['touch'];
+
+            foreach ($files as $file) {
+
+                if (gettype($file) == "array") {
+                    //
+                } else {
+                    if (!file_exists(dirname($file))) {
+                        mkdir(dirname($file));
+                    }
+                    if (!file_exists($file)) {
+                        touch($file);
+
+                        if (pathinfo($file, PATHINFO_EXTENSION) === "php") {
+                            file_put_contents($file, "<?php " . PHP_EOL . PHP_EOL . '// @TODO' . PHP_EOL);
+                        }
+                    }
+
+                    $this->line("-> Created File: {$file}");
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    public function attemptToCreateDirectories()
+    {
+        if (array_key_exists('mkdir', $this->contents)) {
+
+            $this->line("");
+            $this->info("===> Creating directories");
+
+            $dirs = $this->contents['mkdir'];
+
+            foreach ($dirs as $dir) {
+
+                if (gettype($dir) == "array") {
+                    //
+                } else {
+                    if (!file_exists($dir)) {
+                        mkdir($dir, 0777, true);
+                    }
+
+                    $this->line("-> Created Directory: {$dir}");
+                }
+            }
+        }
+
+        return $this;
     }
 
     public function printEndBanner()
