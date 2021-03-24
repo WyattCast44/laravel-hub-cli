@@ -6,6 +6,10 @@ Whereas in docker you would create your docker image using a `docker-compose` fi
 
 # Compose File API
 
+- [name](#name)
+- [env](#env)
+- [php-packages](#env)
+
 ## `name`
 
 - Required: True
@@ -15,28 +19,25 @@ The `name` key is required, the sluggified version of the name will be used to g
 
 ## `env`
 
-The `env` API allows you in insert or update keys in the applications `.env` file.
+The `env` API allows you insert or update (upsert) keys in the applications `.env` file.
 
 An example is show below:
 
 ```yaml
 env:
-- APP_NAME: "Laravel"
-- DB_NAME: "laravel"
-- DB_USER: "laravel"
+ APP_NAME: "Laravel"
+ DB_DATABASE: "laravel"
+ NEW_ENV_KEY: "value"
 ```
 
-laravel-compose.yaml
+## `php-packages`
+
+The `php-packages` API allows you require composer packages into your application.
+
+An example is show below:
 
 ```yaml
-name: Name
-version: master
-env:
- APP_NAME: Name
 php-packages:
- - laravel/socialite
-php-packages-dev:
- - laravel/telescope
-npm-packages:
- - "tailwindcss@latest"
+  - laravel/telescope
+  - laravel/socialite
 ```
