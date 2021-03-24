@@ -139,7 +139,7 @@ class UpsertEnvFile extends Command
 
         file_put_contents($this->path, $newFile);
 
-        $this->info("-> Updated {$this->keyName} to {$this->keyValue}");
+        $this->line("-> Updated {$this->keyName} to {$this->keyValue}");
 
         return $this;
     }
@@ -162,6 +162,6 @@ class UpsertEnvFile extends Command
             FILE_APPEND
         );
 
-        $this->info("-> Upserted {$this->keyName} to {$this->keyValue}");
+        $this->line("-> Upserted {$this->keyName} to {$this->keyValue}");
     }
 }

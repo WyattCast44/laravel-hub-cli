@@ -11,7 +11,7 @@ class InstallComposerPackage extends Command
      *
      * @var string
      */
-    protected $signature = 'php-package:install {name} {--dev=false}';
+    protected $signature = 'php-package:install {name} {--dev}';
 
     /**
      * The description of the command.
@@ -29,7 +29,7 @@ class InstallComposerPackage extends Command
     {
         $name = $this->argument('name');
 
-        $this->info("-> Installing {$name}");
+        $this->line("-> Installing {$name}");
 
         if (!$this->option('dev')) {
             exec("composer require {$name} --quiet");

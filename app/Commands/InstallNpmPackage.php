@@ -11,7 +11,7 @@ class InstallNpmPackage extends Command
      *
      * @var string
      */
-    protected $signature = 'npm-package:install {name} {--dev=false}';
+    protected $signature = 'npm-package:install {name} {--dev}';
 
     /**
      * The description of the command.
@@ -29,7 +29,7 @@ class InstallNpmPackage extends Command
     {
         $name = $this->argument('name');
 
-        $this->info("-> Installing {$name}");
+        $this->line("-> Installing {$name}");
 
         if (!$this->option('dev')) {
             exec("npm install {$name} --silent");

@@ -1,27 +1,23 @@
 name: "Laravel Test App"
 env:
-  APP_NAME: "Money Log"
-  APP_URL: "https://moneylog.test"
-  DB_NAME: "moneylog_db"
-  MAIL_DRIVER: "log"
+  APP_NAME: "Laravel Hub Test App"
+  APP_URL: "http://laravel-hub.test"
+  DB_DATABASE: "laravel-hub"
+  DB_USER: "root"
+  MAIL_MAILER: "log"
 php-packages:
-  - wyattcast44/laravelschema
-  - vinkla/hashids
-  - laravel/telescope
-  - laravel/scout
-  - blade-ui-kit/blade-icons
-  - laravel/socialite
   - laravel/sanctum
 php-packages-dev:
   - brianium/paratest
 npm-packages:
- - "tailwindcss@latest"
- - "postcss@latest"
- - "autoprefixer@latest"
- - "@tailwindcss/typography"
- - "@tailwindcss/forms"
- - "@tailwindcss/line-clamp"
- - "@tailwindcss/aspect-ratio"
  - "alpinejs"
-artisan:
- - migrate
+npm-packages-dev:
+ - "tailwindcss/@latest"
+mkdir:
+  - "resources/svg"
+  - "app/Support"
+touch:
+  - "resources/svg/.gitkeep"
+  - "app/Support/helpers.php"
+console:
+  - "code ."

@@ -11,6 +11,7 @@ Whereas in docker you would create your docker image using a `docker-compose` fi
 - [php-packages](#php-packages)
 - [php-packages-dev](#php-packages-dev)
 - [npm-packages](#npm-packages)
+- [npm-packages-dev](#npm-packages)
 
 ## `name`
 
@@ -64,4 +65,15 @@ An example is show below:
 ```yaml
 npm-packages:
   - "tailwindcss/@latest"
+```
+
+## `npm-packages-dev`
+
+The `npm-packages` API allows you install NPM dev packages into your application.
+
+An example is show below:
+
+```yaml
+npm-packages-dev:
+  - "alpinejs"
 ```

@@ -63,11 +63,12 @@ class ComposeCommand extends Command
      * 
      * @var string
      */
-    protected $installCommand = "composer create-project laravel/laravel {NAME} {VERSION}";
+    protected $installCommand = "composer create-project laravel/laravel {NAME} {VERSION} --quiet";
 
     protected $composeKeyCommandMap = [
         'env'              => 'upcertEnvValues',
-        'npm-packages'     => 'attemptToInstallNPMPackages',
+        'npm-packages'     => 'attemptToInstallNpmPackages',
+        'npm-packages-dev' => 'attemptToInstallNpmDevPackages',
         'php-packages'     => 'attemptToInstallComposerPackages',
         'php-packages-dev' => 'attemptToInstallComposerDevPackages',
     ];
@@ -92,7 +93,8 @@ class ComposeCommand extends Command
             ->buildUpComposerCreateCommand()
             ->runComposerCreateProject()
             ->changeDirectoryToProject()
-            ->findHandlersForRemainingKeys();
+            ->findHandlersForRemainingKeys()
+            ->printEndBanner();
     }
 
     protected function printBanner()
@@ -102,7 +104,7 @@ class ComposeCommand extends Command
 | |     __ _ _ __ __ ___   _____| | | |__| |_   _| |__  
 | |    / _` | '__/ _` \ \ / / _ \ | |  __  | | | | '_ \ 
 | |___| (_| | | | (_| |\ V /  __/ | | |  | | |_| | |_) |
-|______\__,_|_|  \__,_| \_/ \___|_| |_|  |_|\__,_|_.__/ " . PHP_EOL, 'fg=red');
+|______\__,_|_|  \__,_| \_/ \___|_| |_|  |_|\__,_|_.__/ ", 'fg=red');
 
         return $this;
     }
@@ -228,6 +230,9 @@ class ComposeCommand extends Command
 
     public function runComposerCreateProject()
     {
+        $this->line("");
+        $this->info("===> Creating a fresh Laravel app");
+
         try {
             exec($this->installCommand);
 
@@ -281,21 +286,28 @@ class ComposeCommand extends Command
         return $this;
     }
 
-    public function attemptToInstallComposerPackages()
+    public function attemptToInstallComposerPackages($dev = false)
     {
-        $this->line("");
+        if (array_key_exists('php-packages', $this->contents) || array_key_exists('php-packages-dev', $this->contents)) {
 
-        $this->info("===> Installing PHP packages");
+            $this->line("");
 
-        if (array_key_exists('php-packages', $this->contents)) {
-            $packages = $this->contents['php-packages'];
+            if (!$dev) {
+                $this->info("===> Installing PHP packages");
+                $packages = $this->contents['php-packages'];
+            } else {
+                $this->info("===> Installing PHP dev packages");
+                $packages = $this->contents['php-packages-dev'];
+            }
+
             foreach ($packages as $package) {
 
                 if (gettype($package) == "array") {
                     //
                 } else {
                     $this->call('php-package:install', [
-                        'name' => $package
+                        'name' => $package,
+                        '--dev' => $dev,
                     ]);
                 }
             }
@@ -306,20 +318,33 @@ class ComposeCommand extends Command
 
     public function attemptToInstallComposerDevPackages()
     {
-        $this->line("");
+        return tap($this, function ($c) {
+            $c->attemptToInstallComposerPackages(true);
+        });
+    }
 
-        $this->info("===> Installing PHP dev packages");
+    public function attemptToInstallNpmPackages($dev = false)
+    {
+        if (array_key_exists('npm-packages', $this->contents) || array_key_exists('npm-packages-dev', $this->contents)) {
 
-        if (array_key_exists('php-packages-dev', $this->contents)) {
-            $packages = $this->contents['php-packages-dev'];
+            $this->line("");
+
+            if (!$dev) {
+                $this->info("===> Installing NPM packages");
+                $packages = $this->contents['npm-packages'];
+            } else {
+                $this->info("===> Installing NPM dev packages");
+                $packages = $this->contents['npm-packages-dev'];
+            }
+
             foreach ($packages as $package) {
 
                 if (gettype($package) == "array") {
                     //
                 } else {
-                    $this->call('php-package:install', [
+                    $this->call('npm-package:install', [
                         'name' => $package,
-                        '--dev' => true,
+                        '--dev' => $dev,
                     ]);
                 }
             }
@@ -328,26 +353,17 @@ class ComposeCommand extends Command
         return $this;
     }
 
-    public function attemptToInstallNPMPackages()
+    public function attemptToInstallNpmDevPackages()
+    {
+        return tap($this, function ($c) {
+            $c->attemptToInstallNpmPackages(true);
+        });
+    }
+
+    public function printEndBanner()
     {
         $this->line("");
 
-        $this->info("===> Installing NPM packages");
-
-        if (array_key_exists('npm-packages', $this->contents)) {
-            $packages = $this->contents['npm-packages'];
-            foreach ($packages as $package) {
-
-                if (gettype($package) == "array") {
-                    //
-                } else {
-                    $this->call('npm-package:install', [
-                        'name' => $package,
-                    ]);
-                }
-            }
-        }
-
-        return $this;
+        $this->info("==> Application composed! Go build something amazing!");
     }
 }
