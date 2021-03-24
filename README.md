@@ -6,19 +6,14 @@ Whereas in docker you would create your docker image using a `docker-compose` fi
 
 # Compose File API
 
-- [name](#name)
 - [env](#env)
+- [name](#name)
+- [touch](#touch)
+- [mkdir](#mkdir)
 - [php-packages](#php-packages)
 - [php-packages-dev](#php-packages-dev)
 - [npm-packages](#npm-packages)
 - [npm-packages-dev](#npm-packages)
-
-## `name`
-
-- Required: True
-- Default: None
-
-The `name` key is required, the sluggified version of the name will be used to generate the folder name where the application will be installed.
 
 ## `env`
 
@@ -31,6 +26,34 @@ env:
  APP_NAME: "Laravel"
  DB_DATABASE: "laravel"
  NEW_ENV_KEY: "value"
+```
+
+## `name`
+
+- Required: True
+
+The `name` key is required, the sluggified version of the name will be used to generate the folder name where the application will be installed.
+
+## `touch`
+
+The `touch` API allows you create files in your application. Any required directories will also be created.
+
+An example is show below:
+
+```yaml
+touch:
+  - "app/Support/helpers.php"
+```
+
+## `mkdir`
+
+The `mkdir` API allows you create directories in your application. Any required parent directories will also be created.
+
+An example is show below:
+
+```yaml
+mkdir:
+  - "resources/svg"
 ```
 
 ## `php-packages`
