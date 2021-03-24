@@ -9,7 +9,8 @@ Whereas in docker you would create your docker image using a `docker-compose` fi
 - [name](#name)
 - [env](#env)
 - [php-packages](#php-packages)
-- [php-packages](#php-packages-dev)
+- [php-packages-dev](#php-packages-dev)
+- [npm-packages](#npm-packages)
 
 ## `name`
 
