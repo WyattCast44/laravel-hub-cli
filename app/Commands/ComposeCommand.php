@@ -70,6 +70,7 @@ class ComposeCommand extends Command
         'env'              => 'upcertEnvValues',
         'touch'            => 'attemptToCreateFiles',
         'mkdir'            => 'attemptToCreateDirectories',
+        'console'          => 'attemptToRunConsoleCommand',
         // FE Deps
         'npm-packages'     => 'attemptToInstallNpmPackages',
         'npm-packages-dev' => 'attemptToInstallNpmDevPackages',
@@ -421,6 +422,30 @@ class ComposeCommand extends Command
                     }
 
                     $this->line("-> Created Directory: {$dir}");
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    public function attemptToRunConsoleCommand()
+    {
+        if (array_key_exists('console', $this->contents)) {
+
+            $this->line("");
+            $this->info("===> Running console commands");
+
+            $commands = $this->contents['console'];
+
+            foreach ($commands as $command) {
+
+                if (gettype($command) == "array") {
+                    //
+                } else {
+                    exec("{$command}", $output);
+
+                    $this->line("-> Ran command: {$command}");
                 }
             }
         }

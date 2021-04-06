@@ -1,3 +1,6 @@
 name: "Laravel Test App"
 artisan:
   - make:model "Post" -mfc
+console:
+  - git init
+  - code .

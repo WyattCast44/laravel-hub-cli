@@ -11,6 +11,7 @@ Whereas in docker you would create your docker image using a `docker-compose` fi
 - [touch](#touch)
 - [mkdir](#mkdir)
 - [artisan](#artisan)
+- [console](#console)
 - [version](#version)
 - [php-packages](#php-packages)
 - [php-packages-dev](#php-packages-dev)
@@ -68,6 +69,18 @@ An example is show below:
 artisan:
   - storage:link
   - make:model Post -mfc
+```
+
+## `console`
+
+The `console` API allows you create run console commands in your application. 
+
+An example is show below:
+
+```yaml
+console:
+  - git init
+  - code .
 ```
 
 ## `version`
