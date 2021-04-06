@@ -10,6 +10,7 @@ Whereas in docker you would create your docker image using a `docker-compose` fi
 - [name](#name)
 - [touch](#touch)
 - [mkdir](#mkdir)
+- [artisan](#artisan)
 - [version](#version)
 - [php-packages](#php-packages)
 - [php-packages-dev](#php-packages-dev)
@@ -55,6 +56,18 @@ An example is show below:
 ```yaml
 mkdir:
   - "resources/svg"
+```
+
+## `artisan`
+
+The `artisan` API allows you run Laravel Artisan commands in your application.
+
+An example is show below:
+
+```yaml
+artisan:
+  - storage:link
+  - make:model Post -mfc
 ```
 
 ## `version`
@@ -110,16 +123,4 @@ An example is show below:
 ```yaml
 npm-packages-dev:
   - "alpinejs"
-```
-
-## `artisan`
-
-The `artisan` API allows you run Laravel Artisan commands in your application.
-
-An example is show below:
-
-```yaml
-artisan:
-  - storage:link
-  - make:model Post -mfc
 ```
