@@ -1,6 +1,3 @@
 name: "Laravel Test App"
-touch:
-  - "app/Support/helpers.php"
-  - "resources/svg/.gitkeep"
-mkdir:
-  - "resources/content/posts"
+artisan:
+  - make:model "Post" -mfc

@@ -119,7 +119,7 @@ class UpsertEnvFile extends Command
                 $parts = explode("=", $buffer);
 
                 if ($parts[0] <> $this->keyName) {
-                    // Blank line, keep it to keep default spacign
+                    // Blank line, keep it to keep default spacing
                     $newFile = $newFile . $buffer;
                 } else {
                     // Key found, overwrite it

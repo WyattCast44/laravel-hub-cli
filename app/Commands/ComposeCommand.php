@@ -76,6 +76,8 @@ class ComposeCommand extends Command
         // BE Deps
         'php-packages'     => 'attemptToInstallComposerPackages',
         'php-packages-dev' => 'attemptToInstallComposerDevPackages',
+        // laravel
+        'artisan'          => 'attemptToRunArtisanCommand',
     ];
 
     /**
@@ -419,6 +421,30 @@ class ComposeCommand extends Command
                     }
 
                     $this->line("-> Created Directory: {$dir}");
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    public function attemptToRunArtisanCommand()
+    {
+        if (array_key_exists('artisan', $this->contents)) {
+
+            $this->line("");
+            $this->info("===> Running artisan commands");
+
+            $commands = $this->contents['artisan'];
+
+            foreach ($commands as $command) {
+
+                if (gettype($command) == "array") {
+                    //
+                } else {
+                    exec("php artisan {$command}");
+
+                    $this->line("-> Ran command: {$command}");
                 }
             }
         }

@@ -59,7 +59,7 @@ mkdir:
 
 ## `version`
 
-The `version` API allows you to declare what version of Laravel you want to install. You can specify any value that composer will accept.
+The `version` API allows you to declare what version of Laravel you want to install. You can specify any valid composer version.
 
 An example is show below:
 
@@ -110,4 +110,16 @@ An example is show below:
 ```yaml
 npm-packages-dev:
   - "alpinejs"
+```
+
+## `artisan`
+
+The `artisan` API allows you run Laravel Artisan commands in your application.
+
+An example is show below:
+
+```yaml
+artisan:
+  - storage:link
+  - make:model Post -mfc
 ```
