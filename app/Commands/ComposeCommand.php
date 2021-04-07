@@ -502,7 +502,7 @@ class ComposeCommand extends Command
             touch('draft.yaml');
             
             // Write contents to draft file
-            file_put_contents('draft.yaml', Yaml::dump($this->contents['blueprint'], 20));
+            file_put_contents('draft.yaml', Yaml::dump($this->contents['blueprint'], 20, 2));
         }
 
         return $this;
