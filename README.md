@@ -20,7 +20,7 @@ But the real power of the tool is when you create a `compose` file. The `compose
 touch app.yaml
 ```
 
-When you are done crafting your recipe (see docs below), you should run the `compose` command:
+When you are done crafting your recipe (see [docs](#compose-file-api) below), you should run the `compose` command:
 
 ```bash
 laravel-hub compose {script=app.yaml}
