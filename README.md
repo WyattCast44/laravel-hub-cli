@@ -1,10 +1,30 @@
-# Laravel Hub CLI
-
 ![Banner](banner.png)
 
-The Laravel Hub CLI is an un-official tool for scaffolding new Laravel applications. The name **Laravel Hub** is inspired by Docker and Docker Hub where individuals and teams can share their container images.
+# Installation
 
-Whereas in docker you would create your docker image using a `docker-compose` file, in Laravel Hub you would create your Laravel Application using a `laravel-compose` file.
+```bash
+composer global require laravel-hub-cli/laravel-hub
+```
+
+# Usage
+
+You can use the CLI as a near drop-in replacement for the offical Laravel installer. For example:
+
+```bash
+laravel-hub new project
+```
+
+But the real power of the tool is when you create a `compose` file. The `compose` file is your basic recipe for your application. You should create an `app.yaml` file in the directory where you would like to create your application.
+
+```touch
+touch app.yaml
+```
+
+When you are done crafting your recipe (see docs below), you should run the `compose` command:
+
+```bash
+laravel-hub compose {script=app.yaml} {name?} {version?} {--force}
+```
 
 # Compose File API
 
