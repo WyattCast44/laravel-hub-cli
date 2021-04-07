@@ -193,3 +193,33 @@ An example is show below:
 npm-packages-dev:
   - "alpinejs"
 ```
+
+# Cookbook
+
+## Basic
+
+This basic recipe will simply create a new Laravel application and set some `env` values
+
+```yaml
+name: "Basic Laravel Recipe"
+env:
+  APP_NAME: "Basic Recipe"
+  DB_DATABASE: "basic"
+```
+
+## Advanced
+
+This advanced recipe will create a new Laravel application and then clone a existing repo and copy some files into your new application. And then launch the app with VS Code.
+
+```yaml
+name: "Advanced Laravel Recipe"
+env:
+  APP_NAME: "Advanced Recipe"
+  DB_DATABASE: "advanced"
+console:
+  - git clone "https://github.com/WyattCast44/laravel-starter-app-tall" "source"
+  - cp -R "source/resources/views" "resources"
+  - cp "source/routes/auth.php" "routes/auth.php"
+  - rm -rf "source"
+  - code .
+```

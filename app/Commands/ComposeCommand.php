@@ -192,6 +192,7 @@ class ComposeCommand extends Command
         if (is_dir("./" . Str::slug($this->projectName))) {
             if ($this->option('force')) {
                 // Need to delete the directory
+                exec("rm -rf " . "./" . Str::slug($this->projectName));
             } else {
                 throw new Exception("A directory already exists in the install path, please delete directory or change app name.");
             }
