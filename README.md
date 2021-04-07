@@ -120,7 +120,7 @@ version: "7.x"
 
 ## `blueprint`
 
-The `blueprint` API is an special key. It installs the powerful [Laravel Blueprint](https://blueprint.laravelshift.com/) package as a dev dependency. It then take the value of the key and writes this to a `draft.yaml` file in your project. This allows you to do anything that the [Laravel Blueprint](https://blueprint.laravelshift.com/) does. 
+The `blueprint` API is an special key. It installs the powerful [Laravel Blueprint](https://blueprint.laravelshift.com/) package as a dev dependency. It then take the value of the key and writes this to a `draft.yaml` file in your project. This allows you to scaffold anything that the [Laravel Blueprint](https://blueprint.laravelshift.com/) package does. 
 
 An example is show below:
 
