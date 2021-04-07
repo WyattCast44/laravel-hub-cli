@@ -3,7 +3,7 @@
     "description": "A tool for scaffolding new Laravel applications.",
     "keywords": ["framework", "laravel", "laravel zero", "console", "cli"],
     "homepage": "https://github.com/laravel-hub-cli/laravel-hub-cli",
-    "type": "project",
+    "type": "library",
     "license": "MIT",
     "support": {
         "issues": "https://github.com/laravel-hub-cli/laravel-hub-cli/issues",
