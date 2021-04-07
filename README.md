@@ -23,8 +23,10 @@ touch app.yaml
 When you are done crafting your recipe (see docs below), you should run the `compose` command:
 
 ```bash
-laravel-hub compose {script=app.yaml} {name?} {version?} {--force}
+laravel-hub compose {script=app.yaml}
 ```
+
+If your `compose` file is named something other than `app.yaml`, pass the name of your file as the first argument.
 
 # Compose File API
 
