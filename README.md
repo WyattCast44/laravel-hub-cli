@@ -1,5 +1,7 @@
 # Laravel Hub CLI
 
+![Banner](banner.png)
+
 The Laravel Hub CLI is an un-official tool for scaffolding new Laravel applications. The name **Laravel Hub** is inspired by Docker and Docker Hub where individuals and teams can share their container images.
 
 Whereas in docker you would create your docker image using a `docker-compose` file, in Laravel Hub you would create your Laravel Application using a `laravel-compose` file.
