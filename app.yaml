@@ -1,6 +1,15 @@
 name: "Laravel Test App"
-artisan:
-  - make:model "Post" -mfc
 console:
-  - git init
   - code .
+blueprint:
+  models:
+    Post:
+      title: string:400
+      content: longtext
+      published_at: nullable timestamp
+
+  controllers:
+    Post:
+      index:
+        query: all
+        render: post.index with:posts

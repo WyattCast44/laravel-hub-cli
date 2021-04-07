@@ -63,7 +63,7 @@ class ComposeCommand extends Command
      * 
      * @var string
      */
-    protected $installCommand = "composer create-project laravel/laravel {NAME} {VERSION} --quiet";
+    protected $installCommand = "composer create-project laravel/laravel {NAME} {VERSION} --quiet --remove-vcs --prefer-dist";
 
     protected $composeKeyCommandMap = [
         // Misc
@@ -79,6 +79,7 @@ class ComposeCommand extends Command
         'php-packages-dev' => 'attemptToInstallComposerDevPackages',
         // laravel
         'artisan'          => 'attemptToRunArtisanCommand',
+        'blueprint'        => 'attemptToInstallBlueprint',
     ];
 
     /**
@@ -96,10 +97,10 @@ class ComposeCommand extends Command
             ->parseRecipeFileYaml()
             ->ensureRecipeIsNotEmpty()
             ->ensureProjectHasAName()
-            // ->ensureDirectoryDNE()
+            ->ensureDirectoryDNE()
             ->determineVersionToIntall()
             ->buildUpComposerCreateCommand()
-            // ->runComposerCreateProject()
+            ->runComposerCreateProject()
             ->changeDirectoryToProject()
             ->findHandlersForRemainingKeys()
             ->printEndBanner();
@@ -189,7 +190,9 @@ class ComposeCommand extends Command
     public function ensureDirectoryDNE()
     {
         if (is_dir("./" . Str::slug($this->projectName))) {
-            if (!$this->option('force')) {
+            if ($this->option('force')) {
+                // Need to delete the directory
+            } else {
                 throw new Exception("A directory already exists in the install path, please delete directory or change app name.");
             }
         }
@@ -472,6 +475,34 @@ class ComposeCommand extends Command
                     $this->line("-> Ran command: {$command}");
                 }
             }
+        }
+
+        return $this;
+    }
+
+    public function attemptToInstallBlueprint()
+    {
+        if (array_key_exists('blueprint', $this->contents)) {
+
+            $this->line("");
+            $this->info("===> Installing Blueprint and creating draft file");
+
+            // Install packages
+            $this->call('php-package:install', [
+                'name' => 'laravel-shift/blueprint',
+                '--dev' => true,
+            ]);
+
+            $this->call('php-package:install', [
+                'name' => 'jasonmccreary/laravel-test-assertions',
+                '--dev' => true,
+            ]);            
+
+            // Create draft file
+            touch('draft.yaml');
+            
+            // Write contents to draft file
+            file_put_contents('draft.yaml', Yaml::dump($this->contents['blueprint'], 20));
         }
 
         return $this;

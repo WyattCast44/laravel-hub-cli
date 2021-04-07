@@ -37,6 +37,7 @@ If your `compose` file is named something other than `app.yaml`, pass the name o
 - [artisan](#artisan)
 - [console](#console)
 - [version](#version)
+- [blueprint](#blueprint)
 - [php-packages](#php-packages)
 - [php-packages-dev](#php-packages-dev)
 - [npm-packages](#npm-packages)
@@ -115,6 +116,37 @@ An example is show below:
 
 ```yaml
 version: "7.x"
+```
+
+## `blueprint`
+
+The `blueprint` API is an special key. It installs the powerful [Laravel Blueprint](https://blueprint.laravelshift.com/) package as a dev dependency. It then take the value of the key and writes this to a `draft.yaml` file in your project. This allows you to do anything that the [Laravel Blueprint](https://blueprint.laravelshift.com/) does. 
+
+An example is show below:
+
+```yaml
+blueprint: 
+    models:
+        Post:
+            title: string:400
+            content: longtext
+            published_at: nullable timestamp
+            author_id: id:user
+
+    controllers:
+        Post:
+            index:
+            query: all
+            render: post.index with:posts
+
+            store:
+            validate: title, content, author_id
+            save: post
+            send: ReviewPost to:post.author.email with:post
+            dispatch: SyncMedia with:post
+            fire: NewPost with:post
+            flash: post.title
+            redirect: post.index
 ```
 
 ## `php-packages`
