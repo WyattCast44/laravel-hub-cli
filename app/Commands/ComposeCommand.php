@@ -280,8 +280,6 @@ class ComposeCommand extends Command
 
     public function attemptToInitGit()
     {
-        dd($this->usingGit);
-
         if ($this->usingGit) {
 
             $this->line("");
