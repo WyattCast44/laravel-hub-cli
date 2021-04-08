@@ -204,6 +204,8 @@ class ComposeCommand extends Command
             }
         }
 
+        dd('here');
+
         return $this;
     }
 
@@ -338,7 +340,9 @@ class ComposeCommand extends Command
                     ->disableOutput()
                     ->run();
 
-                exec('git commit -q -m "Upserting env values"');
+                (new Process(['git commit -q -m "Upserting env values"']))
+                    ->disableOutput()
+                    ->run();
             }
         }
 
@@ -376,7 +380,9 @@ class ComposeCommand extends Command
                     ->disableOutput()
                     ->run();
 
-                exec('git commit -q -m "Adding PHP dependencies"');
+                (new Process(['git commit -q -m "Adding PHP dependencies"']))
+                    ->disableOutput()
+                    ->run();
             }
 
         }
@@ -422,7 +428,9 @@ class ComposeCommand extends Command
                     ->disableOutput()
                     ->run();
 
-                exec('git commit -q -m "Adding NPM packages"');
+                (new Process(['git commit -q -m "Adding NPM packages"']))
+                    ->disableOutput()
+                    ->run();
             }
         }
 
@@ -470,7 +478,9 @@ class ComposeCommand extends Command
                     ->disableOutput()
                     ->run();
 
-                exec('git commit -q -m "Creating files"');
+                (new Process(['git commit -q -m "Creating files"']))
+                    ->disableOutput()
+                    ->run();
             }
 
         }
@@ -505,7 +515,9 @@ class ComposeCommand extends Command
                     ->disableOutput()
                     ->run();
 
-                exec('git commit -q -m "Creating directories"');
+                (new Process(['git commit -q -m "Creating directories"']))
+                    ->disableOutput()
+                    ->run();
             }
         }
 
@@ -537,7 +549,9 @@ class ComposeCommand extends Command
                     ->disableOutput()
                     ->run();
 
-                exec('Running console commands"');
+                (new Process(['git commit -q -m "Running console commands"']))
+                    ->disableOutput()
+                    ->run();
             }
         }
 
@@ -569,7 +583,9 @@ class ComposeCommand extends Command
                     ->disableOutput()
                     ->run();
 
-                exec('git commit -q -m "Running artisan commands"');
+                (new Process(['git commit -q -m "Running artisan commands"']))
+                    ->disableOutput()
+                    ->run();
             }
         }
 
@@ -605,7 +621,9 @@ class ComposeCommand extends Command
                     ->disableOutput()
                     ->run();
 
-                exec('git commit -q -m "Creating Laravel Blueprint draft file"');
+                (new Process(['git commit -q -m "Creating Laravel Blueprint draft file"']))
+                    ->disableOutput()
+                    ->run();
             }
         }
 
