@@ -285,7 +285,7 @@ class ComposeCommand extends Command
             $this->line("");
             $this->info("===> Creating a new Git repository");
 
-            exec('git init --quiet --initial-branch=main');
+            exec('git init --quiet');
     
             // Commit initial progress
             (new Process(['git add .']))
