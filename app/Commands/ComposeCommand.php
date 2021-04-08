@@ -22,10 +22,10 @@ class ComposeCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Compose your application with the given compose file.';
+    protected $description = 'Compose your application with the given recipe file.';
 
     /**
-     * The compose file that we will attempt to compose
+     * The recipe file that we will attempt to compose
      *
      * @var string
      */
@@ -129,9 +129,9 @@ class ComposeCommand extends Command
 
     public function determineRecipeToCompose()
     {
-        $this->recipe = $this->argument('script');
-
-        return $this;
+        return tap($this, function() {
+            $this->recipe = $this->argument('script');
+        });
     }
 
     public function ensureScriptFileExists()
@@ -140,7 +140,7 @@ class ComposeCommand extends Command
             return $this;
         }
 
-        throw new Exception('Unable to find the given compose file: ' . $this->recipe);
+        throw new Exception('Unable to find the given recipe file: ' . $this->recipe);
     }
 
     public function loadRecipeFile()
@@ -168,7 +168,7 @@ class ComposeCommand extends Command
     public function ensureRecipeIsNotEmpty()
     {
         if (empty($this->contents)) {
-            throw new Exception("Compose file ({$this->recipe}) cannot be empty.");
+            throw new Exception("Recipe file ({$this->recipe}) cannot be empty.");
         }
 
         return $this;
@@ -182,11 +182,10 @@ class ComposeCommand extends Command
         
             unset($this->contents['name']);
 
+            return $this;
         } else {
             throw new Exception('The recipe must contain a non-null name.');
-        }
-
-        return $this;
+        }        
     }
 
     public function ensureDirectoryDNE()
@@ -195,10 +194,10 @@ class ComposeCommand extends Command
         
         if (is_dir($path)) {
             if ($this->option('force')) {
-                // Directory already exists, need to delete it.
-                exec("rm -rf " . "./" . Str::slug($this->projectName));
+                (new Process(["rm -rf " . $path]))
+                    ->disableOutput()
+                    ->run();
             } else {
-                // Directory already exists, but --force is false.
                 throw new Exception(
                     "A directory already exists at the install path. To overwrite the directory use --force, or rename the application."
                 );
@@ -221,9 +220,9 @@ class ComposeCommand extends Command
             $version = "";
         }
 
-        $this->version = $version;
-
-        return $this;
+        return tap($this, function() use ($version) {
+            $this->version = $version;
+        });
     }
 
     public function buildUpComposerCreateCommand()
@@ -240,9 +239,9 @@ class ComposeCommand extends Command
             $command = str_replace("{VERSION}", "", $command);
         }
 
-        $this->installCommand = trim($command);
-
-        return $this;
+        return tap($this, function() use ($command) {
+            $this->installCommand = trim($command);
+        });
     }
 
     public function runComposerCreateProject()
@@ -251,7 +250,9 @@ class ComposeCommand extends Command
         $this->info("===> Creating a fresh Laravel app");
 
         try {
-            exec($this->installCommand);
+            (new Process([$this->installCommand]))
+                ->disableOutput()
+                ->run();
 
             return $this;
         } catch (Exception $e) {
@@ -284,15 +285,18 @@ class ComposeCommand extends Command
 
             $this->line("");
             $this->info("===> Creating a new Git repository");
-
-            exec('git init --quiet');
+            
+            (new Process(['git init --quiet']))
+                ->disableOutput()
+                ->run();
     
-            // Commit initial progress
             (new Process(['git add .']))
                 ->disableOutput()
                 ->run();
 
-            exec('git commit -q -m "Creating a fresh Laravel app"');
+            (new Process(['git commit -q -m "Creating a fresh Laravel app"']))
+                ->disableOutput()
+                ->run();
         }
 
         return $this;
