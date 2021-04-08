@@ -2,7 +2,6 @@
 
 namespace App\Commands;
 
-use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
 class NewCommand extends Command
@@ -12,22 +11,23 @@ class NewCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'new 
-                            {name} 
-                            {--dev=false}
-                            {--jet=false}
-                            {--teams=false}
-                            {--f|force=false}
-                            ';
+    protected $signature = 'new {name}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'An proxy for composer create-project';
+    protected $description = 'Create a new Laravel application using composer';
 
-    protected $installCommand = 'composer create-project laravel/laravel {NAME} --remove-vcs --prefer-dist --no-progress';
+    /**
+     * The basic install command, just need to 
+     * replace the name
+     * 
+     * @var string
+     */
+    protected $installCommand = 
+        'composer create-project laravel/laravel {NAME} --remove-vcs --prefer-dist --no-progress --quiet';
 
     /**
      * Execute the console command.

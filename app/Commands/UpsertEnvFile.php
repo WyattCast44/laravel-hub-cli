@@ -3,7 +3,6 @@
 namespace App\Commands;
 
 use Exception;
-use SplFileObject;
 use Illuminate\Support\Str;
 use LaravelZero\Framework\Commands\Command;
 

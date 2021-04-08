@@ -6,6 +6,12 @@
 composer global require laravel-hub-cli/laravel-hub
 ```
 
+# Updating
+
+```bash
+composer global update laravel-hub-cli/laravel-hub
+```
+
 # Usage
 
 You can use the CLI as a near drop-in replacement for the offical Laravel installer. For example:
@@ -31,6 +37,7 @@ If your `compose` file is named something other than `app.yaml`, pass the name o
 # Compose File API
 
 - [env](#env)
+- [git](#git)
 - [name](#name)
 - [touch](#touch)
 - [mkdir](#mkdir)
@@ -54,6 +61,16 @@ env:
  APP_NAME: "Laravel"
  DB_DATABASE: "laravel"
  NEW_ENV_KEY: "value"
+```
+
+## `git`
+
+The `git` API allows you to signal that you would like a git repository to be created and commits to be made for each step. The possible values are: `true` or `false`
+
+An example is show below:
+
+```yaml
+git: true
 ```
 
 ## `name`

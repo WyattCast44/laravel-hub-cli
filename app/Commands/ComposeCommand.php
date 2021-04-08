@@ -5,6 +5,7 @@ namespace App\Commands;
 use Exception;
 use Illuminate\Support\Str;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Process\Process;
 use LaravelZero\Framework\Commands\Command;
 
 class ComposeCommand extends Command
@@ -14,7 +15,7 @@ class ComposeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'compose {script=app.yaml} {name?} {version?} {--force}';
+    protected $signature = 'compose {script=app.yaml} {--force}';
 
     /**
      * The description of the command.
@@ -59,11 +60,17 @@ class ComposeCommand extends Command
     protected $version;
 
     /**
+     * Flag if we are setting up git
+     */
+    protected $usingGit = false;
+
+    /**
      * The composer-create command
      * 
      * @var string
      */
-    protected $installCommand = "composer create-project laravel/laravel {NAME} {VERSION} --quiet --remove-vcs --prefer-dist";
+    protected $installCommand 
+        = "composer create-project laravel/laravel {NAME} {VERSION} --remove-vcs --prefer-dist --no-progress --quiet";
 
     protected $composeKeyCommandMap = [
         // Misc
@@ -102,6 +109,8 @@ class ComposeCommand extends Command
             ->buildUpComposerCreateCommand()
             ->runComposerCreateProject()
             ->changeDirectoryToProject()
+            ->determineIfUsingGit()
+            ->attemptToInitGit()
             ->findHandlersForRemainingKeys()
             ->printEndBanner();
     }
@@ -167,34 +176,32 @@ class ComposeCommand extends Command
 
     public function ensureProjectHasAName()
     {
-        $name = $this->argument('name');
+        if (array_key_exists('name', $this->contents) && $this->contents['name'] != null) {
+            
+            $this->projectName = $this->contents['name'];
+        
+            unset($this->contents['name']);
 
-        if ($name) {
-            $this->projectName = $name;
         } else {
-            if (array_key_exists('name', $this->contents)) {
-                $name = $this->contents['name'];
-                unset($this->contents['name']);
-            }
+            throw new Exception('The recipe must contain a non-null name.');
         }
-
-        if ($name == null) {
-            throw new Exception('The project must have a name, either passed in via the CLI or set in the compose file.');
-        }
-
-        $this->projectName = $name;
 
         return $this;
     }
 
     public function ensureDirectoryDNE()
     {
-        if (is_dir("./" . Str::slug($this->projectName))) {
+        $path = "./" . Str::slug($this->projectName);
+        
+        if (is_dir($path)) {
             if ($this->option('force')) {
-                // Need to delete the directory
+                // Directory already exists, need to delete it.
                 exec("rm -rf " . "./" . Str::slug($this->projectName));
             } else {
-                throw new Exception("A directory already exists in the install path, please delete directory or change app name.");
+                // Directory already exists, but --force is false.
+                throw new Exception(
+                    "A directory already exists at the install path. To overwrite the directory use --force, or rename the application."
+                );
             }
         }
 
@@ -208,11 +215,7 @@ class ComposeCommand extends Command
         if (array_key_exists('version', $this->contents)) {
             $version = $this->contents['version'];
             unset($this->contents['version']);
-        }
-
-        if ($this->argument('version')) {
-            $version = $this->argument('version');
-        }
+        } 
 
         if ($version == null) {
             $version = "";
@@ -265,6 +268,38 @@ class ComposeCommand extends Command
         return $this;
     }
 
+    public function determineIfUsingGit()
+    {
+        if (array_key_exists('git', $this->contents) && $this->contents['git']) {
+            $this->usingGit = true;
+            unset($this->contents['git']);
+        }
+
+        return $this;
+    }
+
+    public function attemptToInitGit()
+    {
+        dd($this->usingGit);
+
+        if ($this->usingGit) {
+
+            $this->line("");
+            $this->info("===> Creating a new Git repository");
+
+            exec('git init --quiet --initial-branch main');
+    
+            // Commit initial progress
+            (new Process(['git add .']))
+                ->disableOutput()
+                ->run();
+
+            exec('git commit -q -m "Creating a fresh Laravel app"');
+        }
+
+        return $this;
+    }
+
     public function findHandlersForRemainingKeys()
     {
         foreach ($this->contents as $key => $value) {
@@ -295,6 +330,14 @@ class ComposeCommand extends Command
             }
 
             unset($this->contents['env']);
+
+            if ($this->usingGit) {
+                (new Process(['git add .']))
+                    ->disableOutput()
+                    ->run();
+
+                exec('git commit -q -m "Upserting env values"');
+            }
         }
 
         return $this;
@@ -325,6 +368,15 @@ class ComposeCommand extends Command
                     ]);
                 }
             }
+
+            if ($this->usingGit) {
+                (new Process(['git add .']))
+                    ->disableOutput()
+                    ->run();
+
+                exec('git commit -q -m "Adding PHP dependencies"');
+            }
+
         }
 
         return $this;
@@ -361,6 +413,14 @@ class ComposeCommand extends Command
                         '--dev' => $dev,
                     ]);
                 }
+            }
+
+            if ($this->usingGit) {
+                (new Process(['git add .']))
+                    ->disableOutput()
+                    ->run();
+
+                exec('git commit -q -m "Adding NPM packages"');
             }
         }
 
@@ -402,6 +462,15 @@ class ComposeCommand extends Command
                     $this->line("-> Created File: {$file}");
                 }
             }
+
+            if ($this->usingGit) {
+                (new Process(['git add .']))
+                    ->disableOutput()
+                    ->run();
+
+                exec('git commit -q -m "Creating files"');
+            }
+
         }
 
         return $this;
@@ -428,6 +497,14 @@ class ComposeCommand extends Command
                     $this->line("-> Created Directory: {$dir}");
                 }
             }
+
+            if ($this->usingGit) {
+                (new Process(['git add .']))
+                    ->disableOutput()
+                    ->run();
+
+                exec('git commit -q -m "Creating directories"');
+            }
         }
 
         return $this;
@@ -452,6 +529,14 @@ class ComposeCommand extends Command
                     $this->line("-> Ran command: {$command}");
                 }
             }
+
+            if ($this->usingGit) {
+                (new Process(['git add .']))
+                    ->disableOutput()
+                    ->run();
+
+                exec('Running console commands"');
+            }
         }
 
         return $this;
@@ -475,6 +560,14 @@ class ComposeCommand extends Command
 
                     $this->line("-> Ran command: {$command}");
                 }
+            }
+
+            if ($this->usingGit) {
+                (new Process(['git add .']))
+                    ->disableOutput()
+                    ->run();
+
+                exec('git commit -q -m "Running artisan commands"');
             }
         }
 
@@ -504,6 +597,14 @@ class ComposeCommand extends Command
             
             // Write contents to draft file
             file_put_contents('draft.yaml', Yaml::dump($this->contents['blueprint'], 20, 2));
+
+            if ($this->usingGit) {
+                (new Process(['git add .']))
+                    ->disableOutput()
+                    ->run();
+
+                exec('git commit -q -m "Creating Laravel Blueprint draft file"');
+            }
         }
 
         return $this;

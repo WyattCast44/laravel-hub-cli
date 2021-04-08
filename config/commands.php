@@ -65,7 +65,6 @@ return [
         // Application commands
         App\Commands\UpsertEnvFile::class,
         App\Commands\InstallNpmPackage::class,
-        App\Commands\RunConsoleCommand::class,
         App\Commands\InstallComposerPackage::class,
     ],
 

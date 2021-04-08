@@ -1,15 +1,18 @@
 name: "Laravel Test App"
+git: true
+env:
+  APP_NAME: "Test App"
+php-packages:
+  - wyattcast44/laravelschema
+php-packages-dev:
+  - brianium/paratest
+npm-packages:
+ - "autoprefixer@latest"
+mkdir:
+  - "resources/svg"
+touch:
+  - "app/Support/helpers.php"
+artisan:
+  - "storage:link"
 console:
-  - code .
-blueprint:
-  models:
-    Post:
-      title: string:400
-      content: longtext
-      published_at: nullable timestamp
-
-  controllers:
-    Post:
-      index:
-        query: all
-        render: post.index with:posts
+  - "code ."
