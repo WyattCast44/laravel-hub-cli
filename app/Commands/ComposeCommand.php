@@ -194,17 +194,16 @@ class ComposeCommand extends Command
         
         if (is_dir($path)) {
             if ($this->option('force')) {
-                (new Process(["rm -rf " . $path]))
+                (new Process(['rm', '-rf', $path]))
                     ->disableOutput()
-                    ->run();
+                    ->mustRun();
+                
             } else {
                 throw new Exception(
                     "A directory already exists at the install path. To overwrite the directory use --force, or rename the application."
                 );
             }
         }
-
-        dd('here');
 
         return $this;
     }
@@ -231,14 +230,14 @@ class ComposeCommand extends Command
     {
         $command = trim(str_replace(
             "{NAME}",
-            "\"" . Str::slug($this->projectName) . "\"",
+            Str::slug($this->projectName),
             $this->installCommand
         ));
 
         if ($this->version != "") {
-            $command = str_replace("{VERSION}", "\"" . $this->version . "\"", $command);
+            $command = str_replace("{VERSION}", $this->version, $command);
         } else {
-            $command = str_replace("{VERSION}", "", $command);
+            $command = str_replace("  ", " ", str_replace("{VERSION}", "", $command));
         }
 
         return tap($this, function() use ($command) {
@@ -252,9 +251,10 @@ class ComposeCommand extends Command
         $this->info("===> Creating a fresh Laravel app");
 
         try {
-            (new Process([$this->installCommand]))
+            (new Process(array_values(explode(' ', $this->installCommand))))
+                ->setTimeout(60 * 5) // 5 minutes
                 ->disableOutput()
-                ->run();
+                ->mustRun();
 
             return $this;
         } catch (Exception $e) {
@@ -288,17 +288,17 @@ class ComposeCommand extends Command
             $this->line("");
             $this->info("===> Creating a new Git repository");
             
-            (new Process(['git init --quiet']))
+            (new Process(['git', 'init', '--quiet']))
                 ->disableOutput()
-                ->run();
+                ->mustRun();
     
-            (new Process(['git add .']))
+            (new Process(['git', 'add', '.']))
                 ->disableOutput()
-                ->run();
+                ->mustRun();
 
-            (new Process(['git commit -q -m "Creating a fresh Laravel app"']))
+            (new Process(['git', 'commit', '-q' , '-m', 'Creating a fresh Laravel app']))
                 ->disableOutput()
-                ->run();
+                ->mustRun();
         }
 
         return $this;
